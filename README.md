@@ -54,7 +54,7 @@ Pour passer en QWERTY : dans l'éditeur, décocher `bAzertyLayout` sur le person
 
 ### Sous Windows (conseillé pour jouer et travailler à deux)
 
-1. **Installer Unreal Engine 5** (5.4 ou plus récent) avec l'**Epic Games Launcher**.
+1. **Installer Unreal Engine 5** (version 5.8.3, la même pour tout le monde) avec l'**Epic Games Launcher**.
 2. **Installer Visual Studio 2022 Community** (gratuit). Pendant l'installation, cocher :
    - « **Développement Desktop en C++** »
    - « **Développement de jeux en C++** » (et, à droite, les outils pour Unreal Engine)
