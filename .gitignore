@@ -1,0 +1,29 @@
+# Unreal Engine - fichiers generes
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+Build/
+Plugins/*/Binaries/
+Plugins/*/Intermediate/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+*.xcworkspace
+Makefile
+CMakeLists.txt
+*.code-workspace
+compile_commands.json
+
+# Divers
+*.log
+.DS_Store
+Thumbs.db
