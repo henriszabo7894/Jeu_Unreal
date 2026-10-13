@@ -32,9 +32,10 @@ AZoneBuilder* AZoneGameMode::EnsureZoneBuilder()
 		return CachedBuilder;
 	}
 	UWorld* World = GetWorld();
-	for (TActorIterator<AZoneBuilder> It(World); It; ++It)
+	TActorIterator<AZoneBuilder> ExistingBuilder(World);
+	if (ExistingBuilder)
 	{
-		CachedBuilder = *It;
+		CachedBuilder = *ExistingBuilder;
 		return CachedBuilder;
 	}
 	if (!bAutoSpawnZoneBuilder)

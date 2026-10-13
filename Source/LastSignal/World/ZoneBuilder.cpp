@@ -796,12 +796,7 @@ void AZoneBuilder::SpawnGameplayActors()
 	FRandomStream R(Seed + 77);
 
 	// Extraction (sauf si tu en as déjà placé une à la main)
-	bool bHasExtraction = false;
-	for (TActorIterator<AExtractionZone> It(World); It; ++It)
-	{
-		bHasExtraction = true;
-		break;
-	}
+	const bool bHasExtraction = static_cast<bool>(TActorIterator<AExtractionZone>(World));
 	if (!bHasExtraction)
 	{
 		World->SpawnActor<AExtractionZone>(AExtractionZone::StaticClass(), ActorT.TransformPosition(ExtractionLocal), ActorT.Rotator());
