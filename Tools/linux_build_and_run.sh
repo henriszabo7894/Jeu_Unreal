@@ -18,5 +18,13 @@ echo "==> Compilation de LastSignal (la première fois peut prendre plusieurs mi
 "$UE_DIR/Engine/Build/BatchFiles/Linux/Build.sh" LastSignalEditor Linux Development \
   -Project="$UPROJECT" -WaitMutex
 
+# PC portable avec 2 cartes graphiques (Intel + NVIDIA) : on force la NVIDIA
+if command -v nvidia-smi >/dev/null 2>&1; then
+  echo "==> Carte NVIDIA détectée : Unreal utilisera la NVIDIA"
+  export __NV_PRIME_RENDER_OFFLOAD=1
+  export __VK_LAYER_NV_optimus=NVIDIA_only
+  export __GLX_VENDOR_LIBRARY_NAME=nvidia
+fi
+
 echo "==> Ouverture de l'éditeur..."
 exec "$UE_DIR/Engine/Binaries/Linux/UnrealEditor" "$UPROJECT"
