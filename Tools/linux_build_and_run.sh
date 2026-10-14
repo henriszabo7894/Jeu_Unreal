@@ -26,5 +26,11 @@ if command -v nvidia-smi >/dev/null 2>&1; then
   export __GLX_VENDOR_LIBRARY_NAME=nvidia
 fi
 
+# Sous Wayland, la fenêtre Unreal peut se figer : on passe par X11 (XWayland)
+if [ "${XDG_SESSION_TYPE:-}" = "wayland" ] && [ -z "${SDL_VIDEODRIVER:-}" ]; then
+  echo "==> Session Wayland détectée : affichage via X11 pour plus de stabilité"
+  export SDL_VIDEODRIVER=x11
+fi
+
 echo "==> Ouverture de l'éditeur..."
 exec "$UE_DIR/Engine/Binaries/Linux/UnrealEditor" "$UPROJECT"
