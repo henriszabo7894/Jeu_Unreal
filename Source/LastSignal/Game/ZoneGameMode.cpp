@@ -4,6 +4,7 @@
 #include "EngineUtils.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
+#include "Misc/PackageName.h"
 #include "TimerManager.h"
 
 #include "Items/ItemPickup.h"
@@ -17,6 +18,21 @@ AZoneGameMode::AZoneGameMode()
 	DefaultPawnClass = ABodycamCharacter::StaticClass();
 	PlayerControllerClass = ABodycamPlayerController::StaticClass();
 	HUDClass = ABodycamHUD::StaticClass();
+}
+
+void AZoneGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+
+	// Utilise BP_Player s'il a été créé dans l'éditeur
+	if (!PlayerBlueprintPath.IsEmpty() && FPackageName::DoesPackageExist(PlayerBlueprintPath))
+	{
+		const FString ClassPath = PlayerBlueprintPath + TEXT(".") + FPackageName::GetShortName(PlayerBlueprintPath) + TEXT("_C");
+		if (UClass* PlayerClass = LoadClass<APawn>(nullptr, *ClassPath))
+		{
+			DefaultPawnClass = PlayerClass;
+		}
+	}
 }
 
 void AZoneGameMode::StartPlay()

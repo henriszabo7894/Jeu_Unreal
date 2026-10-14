@@ -4,6 +4,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Engine/SkeletalMesh.h"
 #include "Components/SpotLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/DamageEvents.h"
@@ -110,21 +111,31 @@ ABodycamCharacter::ABodycamCharacter()
 	Flashlight->VolumetricScatteringIntensity = 1.6f; // faisceau visible dans le brouillard
 	Flashlight->SetMobility(EComponentMobility::Movable);
 
+	WeaponPivot = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponPivot"));
+	WeaponPivot->SetupAttachment(Camera);
+	WeaponPivot->SetRelativeLocation(BodycamPoses::HipLocation);
+
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
-	WeaponMesh->SetupAttachment(Camera);
+	WeaponMesh->SetupAttachment(WeaponPivot);
 	if (CubeMesh.Succeeded())
 	{
 		WeaponMesh->SetStaticMesh(CubeMesh.Object);
 	}
 	WeaponMesh->SetRelativeScale3D(FVector(0.22f, 0.045f, 0.11f));
-	WeaponMesh->SetRelativeLocation(BodycamPoses::HipLocation);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	WeaponMesh->SetCastShadow(false);
+
+	WeaponSkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponSkeletalMesh"));
+	WeaponSkeletalMesh->SetupAttachment(WeaponPivot);
+	WeaponSkeletalMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponSkeletalMesh->SetCastShadow(false);
+	WeaponSkeletalMesh->SetVisibility(false);
 	CurrentWeaponLocation = BodycamPoses::HipLocation;
 	CurrentWeaponRotation = BodycamPoses::HipRotation;
 
 	MuzzleLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("MuzzleLight"));
-	MuzzleLight->SetupAttachment(Camera);
+	MuzzleLight->SetupAttachment(WeaponPivot);
+	MuzzleLight->SetRelativeLocation(MuzzleOffset);
 	MuzzleLight->IntensityUnits = ELightUnits::Candelas;
 	MuzzleLight->Intensity = 400.f;
 	MuzzleLight->AttenuationRadius = 900.f;
@@ -148,8 +159,24 @@ void ABodycamCharacter::BeginPlay()
 	Flashlight->SetVisibility(bFlashlightOn);
 	FlickerCooldown = FMath::FRandRange(20.f, 45.f);
 
-	// Arme provisoire : bloc gris foncé
-	if (UMaterialInterface* BaseMat = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")))
+	MuzzleLight->SetRelativeLocation(MuzzleOffset);
+
+	if (WeaponSkeletalModel)
+	{
+		// Modèle animé fourni dans BP_Player
+		WeaponSkeletalMesh->SetSkeletalMesh(WeaponSkeletalModel);
+		WeaponSkeletalMesh->SetRelativeTransform(WeaponModelOffset);
+		WeaponSkeletalMesh->SetVisibility(true);
+		WeaponMesh->SetVisibility(false);
+	}
+	else if (WeaponModel)
+	{
+		// Modèle statique fourni dans BP_Player
+		WeaponMesh->SetStaticMesh(WeaponModel);
+		WeaponMesh->SetRelativeTransform(WeaponModelOffset);
+	}
+	// Sinon, arme provisoire : bloc gris foncé
+	else if (UMaterialInterface* BaseMat = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")))
 	{
 		UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BaseMat, this);
 		MID->SetVectorParameterValue(TEXT("Color"), FLinearColor(0.02f, 0.02f, 0.022f));
@@ -556,8 +583,7 @@ void ABodycamCharacter::UpdateWeaponPose(float DeltaSeconds)
 
 	CurrentWeaponLocation = FMath::VInterpTo(CurrentWeaponLocation, TargetLoc, DeltaSeconds, 12.f);
 	CurrentWeaponRotation = FMath::RInterpTo(CurrentWeaponRotation, TargetRot, DeltaSeconds, 10.f);
-	WeaponMesh->SetRelativeLocationAndRotation(CurrentWeaponLocation, CurrentWeaponRotation);
-	MuzzleLight->SetRelativeLocation(CurrentWeaponLocation + FVector(16.f, 0.f, 2.f));
+	WeaponPivot->SetRelativeLocationAndRotation(CurrentWeaponLocation, CurrentWeaponRotation);
 }
 
 void ABodycamCharacter::UpdateFlashlight(float DeltaSeconds)

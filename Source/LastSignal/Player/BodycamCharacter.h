@@ -8,6 +8,9 @@ class UCameraComponent;
 class USpotLightComponent;
 class UPointLightComponent;
 class UStaticMeshComponent;
+class USkeletalMeshComponent;
+class UStaticMesh;
+class USkeletalMesh;
 class UInventoryComponent;
 class UBodycamWeaponComponent;
 class UInputAction;
@@ -80,9 +83,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bodycam")
 	TObjectPtr<USpotLightComponent> Flashlight;
 
-	/** Arme provisoire (un simple bloc) en attendant un vrai modèle 3D. */
+	/** Point qui bouge avec l'arme (balancement, visée, recul). Les modèles 3D y sont accrochés. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bodycam")
+	TObjectPtr<USceneComponent> WeaponPivot;
+
+	/** Arme provisoire (un simple bloc), ou ton modèle statique si WeaponModel est rempli. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bodycam")
 	TObjectPtr<UStaticMeshComponent> WeaponMesh;
+
+	/** Utilisé si WeaponSkeletalModel est rempli (arme animée / bras). */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bodycam")
+	TObjectPtr<USkeletalMeshComponent> WeaponSkeletalMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bodycam")
 	TObjectPtr<UPointLightComponent> MuzzleLight;
@@ -92,6 +103,24 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Bodycam")
 	TObjectPtr<UBodycamWeaponComponent> Weapon;
+
+	// ---------- Arme 3D (à remplir dans BP_Player) ----------
+
+	/** Modèle 3D statique de l'arme (ex : pistolet téléchargé sur Fab). Remplace le bloc gris. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bodycam|Arme 3D")
+	TObjectPtr<UStaticMesh> WeaponModel;
+
+	/** Modèle 3D animé (Skeletal Mesh) : arme ou bras + arme. Prioritaire sur WeaponModel. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bodycam|Arme 3D")
+	TObjectPtr<USkeletalMesh> WeaponSkeletalModel;
+
+	/** Position / rotation / taille du modèle 3D par rapport au point de l'arme. À ajuster jusqu'à ce que ce soit joli. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bodycam|Arme 3D")
+	FTransform WeaponModelOffset;
+
+	/** Position du bout du canon (flash du tir) par rapport au point de l'arme. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bodycam|Arme 3D")
+	FVector MuzzleOffset = FVector(16.f, 0.f, 2.f);
 
 	// ---------- Réglages : contrôles ----------
 

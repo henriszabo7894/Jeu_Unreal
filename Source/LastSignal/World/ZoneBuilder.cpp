@@ -276,14 +276,18 @@ void AZoneBuilder::BuildZone()
 	PlayerStartLocal = FVector(250.f, -250.f, 0.f);
 	ExtractionLocal = FVector(StreetLength - 350.f, 0.f, 0.f);
 
-	FRandomStream R(Seed);
-	BuildGroundAndStreet(R);
-	BuildQuarantineWalls();
-	BuildBuildings(R);
-	BuildCars(R);
-	BuildStreetFurniture(R);
-	BuildCheckpoint(R);
-	BuildDebris(R);
+	// Chaque partie a sa propre graine : en désactiver une ne change pas les autres
+	FRandomStream RGround(Seed), RBuildings(Seed + 1), RCars(Seed + 2), RProps(Seed + 3), RCheckpoint(Seed + 4), RDebris(Seed + 5);
+	if (bBuildGround) BuildGroundAndStreet(RGround);
+	if (bBuildQuarantineWalls) BuildQuarantineWalls();
+	QuarantineSign->SetVisibility(bBuildQuarantineWalls);
+	if (bBuildBuildings) BuildBuildings(RBuildings);
+	if (bBuildCars) BuildCars(RCars);
+	if (bBuildStreetProps) BuildStreetFurniture(RProps);
+	if (bBuildCheckpoint) BuildCheckpoint(RCheckpoint);
+	CheckpointSign->SetVisibility(bBuildCheckpoint);
+	Floodlight->SetVisibility(bBuildCheckpoint);
+	if (bBuildDebris) BuildDebris(RDebris);
 }
 
 void AZoneBuilder::BuildGroundAndStreet(FRandomStream& R)

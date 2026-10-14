@@ -47,7 +47,12 @@ class LASTSIGNAL_API AZoneGameMode : public AGameModeBase
 public:
 	AZoneGameMode();
 
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void StartPlay() override;
+
+	/** Si ce Blueprint existe, il est utilisé comme joueur (pour régler l'arme 3D, etc.). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone")
+	FString PlayerBlueprintPath = TEXT("/Game/Blueprints/BP_Player");
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
 	void RegisterObjective(AItemPickup* Pickup);

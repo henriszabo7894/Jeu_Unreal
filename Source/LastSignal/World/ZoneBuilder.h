@@ -73,6 +73,30 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone")
 	int32 NumCars = 11;
 
+	// Décoche ces cases au fur et à mesure que tu remplaces les blocs par de vrais assets.
+	// Sans immeubles générés, place toi-même les objets à ramasser (ItemPickup, Is Objective).
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Blocs")
+	bool bBuildGround = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Blocs")
+	bool bBuildQuarantineWalls = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Blocs")
+	bool bBuildBuildings = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Blocs")
+	bool bBuildCars = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Blocs")
+	bool bBuildStreetProps = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Blocs")
+	bool bBuildCheckpoint = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Blocs")
+	bool bBuildDebris = true;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone")
 	int32 NumDebris = 160;
 
