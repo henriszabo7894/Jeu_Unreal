@@ -33,9 +33,9 @@ Jeu d'horreur post-apocalyptique **réaliste en vue bodycam** (dans l'esprit de 
 
 ## Contrôles
 
-| Action | AZERTY (par défaut) | QWERTY |
+| Action | AZERTY | QWERTY (par défaut) |
 |---|---|---|
-| Avancer / reculer / gauche / droite | Z / S / Q / D | W / S / A / D |
+| Avancer / reculer / gauche / droite | Z / S / Q / D | W / S / A / D (par défaut) |
 | Regarder | Souris | Souris |
 | Sprint | Maj gauche | Maj gauche |
 | S'accroupir | Ctrl gauche ou C | Ctrl gauche ou C |
@@ -46,7 +46,7 @@ Jeu d'horreur post-apocalyptique **réaliste en vue bodycam** (dans l'esprit de 
 | Ramasser / interagir | F | F |
 | Lampe torche | T | T |
 
-Pour passer en QWERTY : dans l'éditeur, décocher `bAzertyLayout` sur le personnage (`BodycamCharacter`).
+Pour passer en AZERTY : dans l'éditeur, cocher `bAzertyLayout` sur le personnage (`BodycamCharacter`).
 
 ---
 

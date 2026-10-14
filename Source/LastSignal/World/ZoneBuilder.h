@@ -83,6 +83,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Gameplay")
 	int32 NumAmmoPickups = 4;
 
+	/** Éteint le soleil, le ciel et le brouillard déjà présents dans la map pour garder la nuit. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Ambiance")
+	bool bOverrideLevelLighting = true;
+
 	/** Lumière de la lune (lux). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone|Ambiance")
 	float MoonIntensity = 0.5f;
@@ -164,6 +168,7 @@ private:
 	void ApplyAtmosphere();
 	void BuildZone();
 	void SpawnGameplayActors();
+	void DisableOtherLevelLighting();
 
 	// Morceaux de la map
 	void BuildGroundAndStreet(FRandomStream& R);

@@ -84,7 +84,7 @@ ABodycamCharacter::ABodycamCharacter()
 	PP.bOverride_VignetteIntensity = true;
 	PP.VignetteIntensity = 0.85f;
 	PP.bOverride_SceneFringeIntensity = true;
-	PP.SceneFringeIntensity = 2.4f;
+	PP.SceneFringeIntensity = 1.2f;
 	PP.bOverride_FilmGrainIntensity = true;
 	PP.FilmGrainIntensity = 0.35f;
 	PP.bOverride_MotionBlurAmount = true;
@@ -99,7 +99,7 @@ ABodycamCharacter::ABodycamCharacter()
 
 	Flashlight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Flashlight"));
 	Flashlight->SetupAttachment(CameraRoot);
-	Flashlight->SetRelativeLocation(FVector(6.f, 16.f, -8.f)); // fixée à l'épaule
+	Flashlight->SetRelativeLocation(FVector(4.f, -20.f, 6.f)); // fixée à l'épaule gauche (pas derrière l'arme)
 	Flashlight->IntensityUnits = ELightUnits::Candelas;
 	Flashlight->Intensity = FlashlightIntensity;
 	Flashlight->AttenuationRadius = 3000.f;

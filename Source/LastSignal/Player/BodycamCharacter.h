@@ -97,7 +97,7 @@ protected:
 
 	/** true = clavier AZERTY (ZQSD), false = QWERTY (WASD). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bodycam|Controles")
-	bool bAzertyLayout = true;
+	bool bAzertyLayout = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bodycam|Controles")
 	float LookSensitivity = 1.f;
@@ -178,7 +178,7 @@ protected:
 	// ---------- Réglages : lampe / vie ----------
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bodycam|Lampe")
-	float FlashlightIntensity = 2600.f;
+	float FlashlightIntensity = 900.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bodycam|Vie")
 	float MaxHealth = 100.f;

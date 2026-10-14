@@ -3,6 +3,8 @@
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Components/SkyAtmosphereComponent.h"
+#include "Components/VolumetricCloudComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/PostProcessComponent.h"
 #include "Components/SkyLightComponent.h"
@@ -135,6 +137,11 @@ void AZoneBuilder::BeginPlay()
 
 	// On reconstruit au lancement : garantit que tout est à jour, même dans une version packagée
 	Rebuild();
+
+	if (bOverrideLevelLighting)
+	{
+		DisableOtherLevelLighting();
+	}
 
 	if (bSpawnGameplayActors && HasAuthority())
 	{
@@ -777,6 +784,38 @@ void AZoneBuilder::BuildDebris(FRandomStream& R)
 			const FVector Offset(R.FRandRange(-80.f, 80.f), R.FRandRange(-40.f, 20.f) * Side, 0.f);
 			const float S = R.FRandRange(45.f, 65.f);
 			Box(EZoneMat::Burnt, Center + Offset + FVector(0.f, 0.f, S * 0.4f), FVector(S, S * 0.9f, S * 0.8f), FRotator(R.FRandRange(-15.f, 15.f), R.FRandRange(0.f, 90.f), R.FRandRange(-15.f, 15.f)));
+		}
+	}
+}
+
+void AZoneBuilder::DisableOtherLevelLighting()
+{
+	// Une map par défaut d'Unreal contient déjà un soleil, un ciel et des nuages :
+	// on les éteint pour que seule notre nuit reste.
+	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+	{
+		AActor* Actor = *It;
+		if (Actor == this)
+		{
+			continue;
+		}
+		if (Actor->GetName().Contains(TEXT("SkySphere")))
+		{
+			Actor->SetActorHiddenInGame(true);
+			continue;
+		}
+		TInlineComponentArray<USceneComponent*> Components(Actor);
+		for (USceneComponent* Comp : Components)
+		{
+			if (Comp->IsA<UDirectionalLightComponent>() || Comp->IsA<USkyLightComponent>() || Comp->IsA<USkyAtmosphereComponent>()
+				|| Comp->IsA<UVolumetricCloudComponent>() || Comp->IsA<UExponentialHeightFogComponent>() || Comp->IsA<UPostProcessComponent>())
+			{
+				Comp->SetVisibility(false);
+				if (UPostProcessComponent* PP = Cast<UPostProcessComponent>(Comp))
+				{
+					PP->bEnabled = false;
+				}
+			}
 		}
 	}
 }
