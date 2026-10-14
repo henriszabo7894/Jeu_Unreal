@@ -27,3 +27,13 @@ compile_commands.json
 *.log
 .DS_Store
 Thumbs.db
+
+# Fichiers sources bruts (à importer dans Unreal, pas à versionner tels quels)
+Content/**/*.fbx
+Content/**/*.FBX
+Content/**/*.obj
+Content/**/*.glb
+Content/**/*.gltf
+Content/**/*.blend
+Content/**/*.zip
+Assets_Sources/
